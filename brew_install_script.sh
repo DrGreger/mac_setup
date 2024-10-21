@@ -1,56 +1,83 @@
 #!/bin/sh
 
-# Homebrew Script for OSX
-# To execute: save and `chmod +x ./brew-install-script.sh` then `./brew-install-script.sh`
+# Check if homebrew is installed
+if ! command -v brew &> /dev/null; then
+    echo "Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-echo "Installing brew..."
-# /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    echo >> /Users/simonwallinherlofsson/.zprofile
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/simonwallinherlofsson/.zprofile
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+else
+    echo "Home brew is already installed"
+fi
 
-echo >> /Users/simonwallinherlofsson/.zprofile
-echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/simonwallinherlofsson/.zprofile
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
-echo "Installing brew cask..."
-# brew tap homebrew/cask
+apps=()
+casks=()
 
 # Programming Languages
-echo "Installing programming languages..."
-brew install rust
+apps+=("rust")
 
 
 # Dev Tools
-echo "Installing development tools..."
-brew install git
-brew install --cask github
-brew install --cask visual-studio-code
-brew install --cask openlens
-brew install --cask iterm2
-brew install minikube
+apps+=("git" "minikube")
+casks+=("github" "visual-studio-code" "openlens" "iterm2")
 
 # Communication Apps
-echo "Installing communication apps..."
-brew install --cask discord
-brew install --cask zoom
+apps+=()
+casks+=("discord" "zoom")
 
 # Web Tools
-echo "Installing web tools..."
-brew install node
-brew install nvm
+apps+=("node" "nvm" "yarn")
+casks+=()
 
 # File Storage
-echo "Installing file storage tools..."
+apps+=()
+casks+=()
 
 # Writing Apps
-echo "Installing writing apps..."
-brew install --cask obsidian
+apps+=()
+casks+=("obsidian")
 
 # Other
-echo "Installing everything else..."
-brew install --cask steam
-brew install --cask vlc
-# brew install --cask tor-browser
-brew install --cask google-chrome
+apps+=()
+casks+=("steam" "vlc" "google-chrome") # tor-browser
 
 # Additional installs
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+apps+=()
+casks+=()
+
+if [ -d "$HOME/.oh-my-zsh" ]; then 
+    echo "Oh My Zsh is already installed."
+else
+    echo "Oh My Zsh is not installed. Installing..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
+
+# Function to check if a regular application is installed
+is_installed() {
+    brew list $1 &> /dev/null
+}
+
+# Function to check if a cask application is installed
+is_cask_installed() {
+    brew list --cask $1 &> /dev/null
+}
+
+# Function to check if an application is installed
+check_and_install() {
+    if ! $2 $1; then
+        echo "$1 is not installed. Installing..."
+        brew install $1
+    else
+        echo "$1 is already installed."
+    fi
+}
+
+# Loop through the list of applications
+for app in "${apps[@]}"; do
+    check_and_install $app "is_installed"
+done
+for cask in "${casks[@]}"; do
+    check_and_install $cask "is_cask_installed"
+done
