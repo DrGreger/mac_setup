@@ -5,6 +5,11 @@
 
 echo "Installing brew..."
 # /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+echo >> /Users/simonwallinherlofsson/.zprofile
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/simonwallinherlofsson/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 echo "Installing brew cask..."
 # brew tap homebrew/cask
@@ -44,7 +49,7 @@ brew install --cask obsidian
 echo "Installing everything else..."
 brew install --cask steam
 brew install --cask vlc
-brew install --cask tor-browser
+# brew install --cask tor-browser
 brew install --cask google-chrome
 
 # Additional installs
