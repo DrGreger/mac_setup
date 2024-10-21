@@ -44,6 +44,8 @@ brew install --cask obsidian
 echo "Installing everything else..."
 brew install --cask steam
 brew install --cask vlc
+brew install --cask tor-browser
+brew install --cask google-chrome
 
 # Additional installs
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
