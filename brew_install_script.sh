@@ -16,12 +16,12 @@ apps=()
 casks=()
 
 # Programming Languages
-apps+=("rust")
-
+apps+=("rust" "dotnet")
+casks+=()
 
 # Dev Tools
 apps+=("git" "minikube")
-casks+=("github" "visual-studio-code" "openlens" "iterm2")
+casks+=("github" "visual-studio-code" "openlens" "iterm2" "rider")
 
 # Communication Apps
 apps+=()
@@ -39,8 +39,12 @@ casks+=()
 apps+=()
 casks+=("obsidian")
 
+# SVS Tools
+# Backstage development
+apps+=("sops" "age" "yq")
+
 # Other
-apps+=()
+apps+=(wget)
 casks+=("steam" "vlc" "google-chrome") # tor-browser
 
 # Additional installs
@@ -68,7 +72,11 @@ is_cask_installed() {
 check_and_install() {
     if ! $2 $1; then
         echo "$1 is not installed. Installing..."
-        brew install $1
+        if [ "$2" == "is_cask_installed" ]; then
+            brew install --cask $1
+        else
+            brew install $1
+        fi
     else
         echo "$1 is already installed."
     fi
@@ -79,5 +87,5 @@ for app in "${apps[@]}"; do
     check_and_install $app "is_installed"
 done
 for cask in "${casks[@]}"; do
-    check_and_install $cask "is_cask_installed"
+    check_and_install $cask "is_cask_installed" --cask 
 done
