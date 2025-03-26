@@ -20,7 +20,7 @@ apps+=("rust" "dotnet")
 casks+=()
 
 # Dev Tools
-apps+=("git" "minikube")
+apps+=("git" "minikube" "helm")
 casks+=("github" "visual-studio-code" "openlens" "iterm2" "rider")
 
 # Communication Apps
